@@ -1,0 +1,37 @@
+@page
+@model ExpenseTracker.Pages.DeleteModel
+@{
+    ViewData["Title"] = "Delete expense";
+}
+
+<div class="page-header">
+    <a class="back-link" asp-page="/Index">← Back to expenses</a>
+    <p class="eyebrow">Permanent action</p>
+    <h1>Delete expense?</h1>
+    <p class="lede">This cannot be undone. Please confirm that you want to remove this record.</p>
+</div>
+
+@if (Model.ErrorMessage is not null)
+{
+    <div class="alert alert-error" role="alert">@Model.ErrorMessage</div>
+}
+
+@if (Model.Expense is not null)
+{
+    <section class="content-card delete-card" aria-labelledby="delete-heading">
+        <div class="delete-icon" aria-hidden="true">!</div>
+        <div>
+            <h2 id="delete-heading">@Model.Expense.Title</h2>
+            <dl class="confirm-details">
+                <div><dt>Category</dt><dd>@Model.Expense.Category</dd></div>
+                <div><dt>Date</dt><dd>@Model.Expense.Date.ToString("dd MMM yyyy", CultureInfo.CurrentCulture)</dd></div>
+                <div><dt>Amount</dt><dd>@Model.Expense.Amount.ToString("N2", CultureInfo.CurrentCulture)</dd></div>
+            </dl>
+        </div>
+        <form method="post" class="delete-actions">
+            <input type="hidden" name="id" value="@Model.Expense.Id" />
+            <a class="button button-quiet" asp-page="/Index">Keep expense</a>
+            <button class="button button-danger" type="submit">Yes, delete it</button>
+        </form>
+    </section>
+}

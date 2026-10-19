@@ -1,0 +1,17 @@
+## .NET build output
+bin/
+obj/
+
+## Local runtime data (created by the app)
+App_Data/
+
+## IDE and user files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,134 @@
+@page
+@model ExpenseTracker.Pages.IndexModel
+@{
+    ViewData["Title"] = "Expenses";
+}
+
+<section class="hero-panel" aria-labelledby="page-title">
+    <div>
+        <p class="eyebrow">Your local spending overview</p>
+        <h1 id="page-title">Expenses</h1>
+        <p class="lede">Keep a clear, private record of where your money goes.</p>
+    </div>
+    <a class="button button-primary" asp-page="/Create">Add expense <span aria-hidden="true">＋</span></a>
+</section>
+
+@if (Model.FlashMessage is not null)
+{
+    <div class="alert alert-success" role="status">@Model.FlashMessage</div>
+}
+@if (Model.ErrorMessage is not null)
+{
+    <div class="alert alert-error" role="alert">@Model.ErrorMessage</div>
+}
+
+<section class="summary-grid" aria-label="Spending summary">
+    <div class="summary-card summary-card-accent">
+        <span class="summary-label">Showing</span>
+        <strong>@Model.Expenses.Count expense@(Model.Expenses.Count == 1 ? "" : "s")</strong>
+        <span class="summary-detail">@((Model.Category is null && Model.Month is null) ? "All recorded expenses" : "After applying filters")</span>
+    </div>
+    <div class="summary-card">
+        <span class="summary-label">Total spending</span>
+        <strong>@Model.TotalAmount.ToString("N2", CultureInfo.CurrentCulture) <small>@Model.CurrencyCode</small></strong>
+        <span class="summary-detail">For the expenses currently shown</span>
+    </div>
+</section>
+
+<section class="content-card filters-card" aria-labelledby="filters-heading">
+    <div class="section-heading compact-heading">
+        <div>
+            <p class="eyebrow">Narrow your view</p>
+            <h2 id="filters-heading">Filters</h2>
+        </div>
+        @if (Model.Category is not null || Model.Month is not null)
+        {
+            <a class="text-link" asp-page="/Index">Clear filters</a>
+        }
+    </div>
+    <form method="get" class="filter-form">
+        <div class="field">
+            <label for="category-filter">Category</label>
+            <select id="category-filter" name="Category">
+                <option value="">All categories</option>
+                @foreach (var category in CategoryOptions.All)
+                {
+                    <option value="@category" selected="@(Model.Category == category ? "selected" : null)">@category</option>
+                }
+            </select>
+        </div>
+        <div class="field">
+            <label for="month-filter">Month</label>
+            <select id="month-filter" name="Month">
+                <option value="">All months</option>
+                @foreach (var month in Model.AvailableMonths)
+                {
+                    var monthDate = DateTime.ParseExact(month, "yyyy-MM", CultureInfo.InvariantCulture);
+                    <option value="@month" selected="@(Model.Month == month)">@monthDate.ToString("MMMM yyyy", CultureInfo.CurrentCulture)</option>
+                }
+            </select>
+        </div>
+        <button class="button button-secondary" type="submit">Apply filters</button>
+    </form>
+</section>
+
+<section class="content-card expense-card" aria-labelledby="list-heading">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Latest first</p>
+            <h2 id="list-heading">Expense list</h2>
+        </div>
+        @if (Model.Expenses.Count > 0)
+        {
+            <span class="scope-note">Totals reflect this list</span>
+        }
+    </div>
+
+    @if (Model.Expenses.Count == 0)
+    {
+        <div class="empty-state">
+            <div class="empty-icon" aria-hidden="true">○</div>
+            <h3>No expenses here yet</h3>
+            <p>@(Model.Category is not null || Model.Month is not null ? "Try clearing a filter, or add a new expense." : "Add your first expense to start seeing your spending picture.")</p>
+            <a class="button button-primary" asp-page="/Create">Add your first expense</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table>
+                <caption class="visually-hidden">Recorded expenses</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Expense</th>
+                        <th scope="col">Category</th>
+                        <th scope="col" class="amount-column">Amount</th>
+                        <th scope="col"><span class="visually-hidden">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var expense in Model.Expenses)
+                {
+                    <tr>
+                        <td data-label="Date" class="date-cell">@expense.Date.ToString("dd MMM yyyy", CultureInfo.CurrentCulture)</td>
+                        <td data-label="Expense">
+                            <strong>@expense.Title</strong>
+                            @if (!string.IsNullOrWhiteSpace(expense.Notes))
+                            {
+                                <span class="row-note">@expense.Notes</span>
+                            }
+                        </td>
+                        <td data-label="Category"><span class="category-pill">@expense.Category</span></td>
+                        <td data-label="Amount" class="amount-cell">@expense.Amount.ToString("N2", CultureInfo.CurrentCulture) @Model.CurrencyCode</td>
+                        <td class="actions-cell">
+                            <a class="action-link" asp-page="/Edit" asp-route-id="@expense.Id">Edit</a>
+                            <a class="action-link action-danger" asp-page="/Delete" asp-route-id="@expense.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>

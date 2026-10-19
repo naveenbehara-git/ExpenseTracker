@@ -1,0 +1,16 @@
+@page
+@model ExpenseTracker.Pages.ErrorModel
+@{
+    ViewData["Title"] = "Something went wrong";
+}
+
+<section class="content-card error-card">
+    <p class="eyebrow">Unexpected interruption</p>
+    <h1>We couldn't complete that request.</h1>
+    <p>Nothing was intentionally changed. Return to your expense list and try again.</p>
+    <a class="button button-primary" asp-page="/Index">Back to expenses</a>
+    @if (Model.ShowRequestId)
+    {
+        <p class="request-id">Reference: <code>@Model.RequestId</code></p>
+    }
+</section>

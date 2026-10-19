@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · Ledgerly</title>
+    <meta name="description" content="A focused local expense tracker." />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="shell nav-shell">
+            <a class="brand" asp-page="/Index" aria-label="Ledgerly home">
+                <span class="brand-mark" aria-hidden="true">L</span>
+                <span>Ledgerly</span>
+            </a>
+            <nav aria-label="Primary navigation">
+                <a asp-page="/Index" class="nav-link">Expenses</a>
+                <a asp-page="/Create" class="button button-small button-primary">Add expense</a>
+            </nav>
+        </div>
+    </header>
+    <main class="shell main-content">
+        @RenderBody()
+    </main>
+    <footer class="site-footer">
+        <div class="shell footer-inner">
+            <span>Ledgerly · local-first expense tracking</span>
+            <span>Your data stays in this app's App_Data folder.</span>
+        </div>
+    </footer>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,40 @@
+@model ExpenseTracker.Models.Expense
+
+<div class="form-grid">
+    <div class="field field-wide">
+        <label asp-for="Title">Title</label>
+        <input asp-for="Title" autocomplete="off" placeholder="e.g. Weekly groceries" />
+        <span asp-validation-for="Title" class="field-validation"></span>
+    </div>
+    <div class="field">
+        <label asp-for="Category">Category</label>
+        <select asp-for="Category">
+            <option value="">Choose a category</option>
+            @foreach (var category in CategoryOptions.All)
+            {
+                <option value="@category" selected="@(Model.Category == category ? "selected" : null)">@category</option>
+            }
+        </select>
+        <span asp-validation-for="Category" class="field-validation"></span>
+    </div>
+    <div class="field">
+        <label asp-for="Amount">Amount</label>
+        <div class="input-with-hint">
+            <input asp-for="Amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" />
+            <span class="input-hint">positive</span>
+        </div>
+        <span class="field-help">Up to 2 decimal places; your local separator is accepted.</span>
+        <span asp-validation-for="Amount" class="field-validation"></span>
+    </div>
+    <div class="field">
+        <label asp-for="Date">Date</label>
+        <input asp-for="Date" type="date" />
+        <span asp-validation-for="Date" class="field-validation"></span>
+    </div>
+    <div class="field field-wide">
+        <label asp-for="Notes">Notes <span class="optional">Optional</span></label>
+        <textarea asp-for="Notes" rows="4" placeholder="Add context if it will help later"></textarea>
+        <span class="field-help">Up to 500 characters.</span>
+        <span asp-validation-for="Notes" class="field-validation"></span>
+    </div>
+</div>
